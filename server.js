@@ -101,7 +101,7 @@ app.post('/todos/:id/:todo', function(req, res){
 
 
 app.get('/todos/:userid', function(req, res){
-	\dbconn.collection('todos').find({creator:req.params.userid}).toArray(function(err, todos) {
+	dbconn.collection('todos').find({creator:req.params.userid}).toArray(function(err, todos) {
 		res.header("Content-Type:","text/json");
 		res.end(JSON.stringify(todos));
 	});

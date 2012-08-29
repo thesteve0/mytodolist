@@ -1,9 +1,19 @@
 #!/bin/env node
 //  OpenShift sample Node application
 
-//These are default
 var express = require('express');
 var fs      = require('fs');
+
+//  Local cache for static content [fixed and loaded at startup]
+var zcache = { 'index.html': '' };
+zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
+
+// Create "express" server.
+var app  = express.createServer();
+app.use(express.methodOverride());
+
+
+//These are defaults for opening our DB connection
 var dbconn;
 var db;
 // Adding these for mongoDB
@@ -16,31 +26,13 @@ mongo = require('mongodb');
       });
       dbconn = conn;
       dbconn.open(function(err, db) {
-  if(!err) {
-    console.log("We are connected");
-  } else {
-  	  console.log("Something went wrong opening the DB");
-  }
+		  if(!err) {
+			console.log("We are connected");
+		  } else {
+			  console.log("Something went wrong opening the DB");
+		  }
+	  });
 });
-      });
-
-
-
-//  Local cache for static content [fixed and loaded at startup]
-var zcache = { 'index.html': '' };
-zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
-
-// Create "express" server.
-var app  = express.createServer();
-app.use(express.methodOverride());
-
-//  Get the environment variables we need.
-var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP;
-var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
-
-if (typeof ipaddr === "undefined") {
-   console.warn('No OPENSHIFT_INTERNAL_IP environment variable');
-}
 
 
 /*  =====================================================================  */
@@ -48,12 +40,8 @@ if (typeof ipaddr === "undefined") {
 /*  =====================================================================  */
 
 // Handler for GET /health
-app.get('/health', function(req, res){
-    res.send('Hello 21212.com People!');
-});
-
 app.get('/redhat', function(req, res){
-    res.send('Hello everyone! MongoDB + Node.JS + OpenShift = Great!');
+    res.send('Hello everyone! MongoDB + Node.JS + OpenShift = Winning^2');
 });
 
 app.get('/', function(req, res){
@@ -114,6 +102,20 @@ app.delete('/todos/:id', function(req, res){
 		res.end(JSON.stringify({message:"success"}));
 	})
 });
+
+
+/*  =====================================================================  */
+/*  Setup the Server. */
+/*  =====================================================================  */
+
+
+//  Get the environment variables we need.
+var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP;
+var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
+
+if (typeof ipaddr === "undefined") {
+   console.warn('No OPENSHIFT_INTERNAL_IP environment variable');
+}
 
 
 

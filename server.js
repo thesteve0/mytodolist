@@ -26,7 +26,15 @@ mongo = require('mongodb');
                             Date(Date.now() ), err);
       });
       dbconn = conn;
-      
+/*      dbconn.open(function(err, db) {
+		  if(!err) {
+			console.log("We are connected");
+		  } else {
+			  console.log("Something went wrong opening the DB");
+		  }
+	  }	);
+*/
+
 });
 
 

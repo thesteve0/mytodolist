@@ -3,6 +3,7 @@
 
 var express = require('express');
 var fs      = require('fs');
+var ObjectID = require('mongodb').ObjectID;
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = { 'index.html': '' };
@@ -32,6 +33,7 @@ mongo = require('mongodb');
 			  console.log("Something went wrong opening the DB");
 		  }
 	  });
+	  dbconn.authenticate(process.env.OPENSHIFT_NOSQL_DB_USERNAME, process.env.OPENSHIFT_NOSQL_DB_PASSWORD);
 });
 
 

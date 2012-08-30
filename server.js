@@ -19,20 +19,21 @@ var dbconn;
 var db;
 // Adding these for mongoDB
 mongo = require('mongodb');
-   murl = process.env.OPENSHIFT_NOSQL_DB_URL + "mytodolist";
-   mongo.connect(murl, function(err, conn) {
-      conn.on('error', function(err) {
-         return console.log('%s: Mongo connect error %s',
-                            Date(Date.now() ), err);
-      });
-      dbconn = conn;
+murl = process.env.OPENSHIFT_NOSQL_DB_URL + "mytodolist";
+mongo.connect(murl, function(err, conn) {
+		
+  conn.on('error', function(err) {
+	 return console.log('%s: Mongo connect error %s',
+						Date(Date.now() ), err);
+  });
+  dbconn = conn;
 /*      dbconn.open(function(err, db) {
-		  if(!err) {
-			console.log("We are connected");
-		  } else {
-			  console.log("Something went wrong opening the DB");
-		  }
-	  }	);
+	  if(!err) {
+		console.log("We are connected");
+	  } else {
+		  console.log("Something went wrong opening the DB");
+	  }
+  }	);
 */
 
 });
@@ -44,7 +45,7 @@ mongo = require('mongodb');
 
 // Handler for GET /health
 app.get('/redhat', function(req, res){
-    res.send('Hello everyone! MongoDB + Node.JS + OpenShift = Winning^2');
+    res.send('Steve needs to learn more Node.JS and ignore people in the front row -bc they hurt his self esteem');
 });
 
 //get all the users

@@ -26,14 +26,15 @@ mongo = require('mongodb');
                             Date(Date.now() ), err);
       });
       dbconn = conn;
-      dbconn.open(function(err, db) {
+/*      dbconn.open(function(err, db) {
 		  if(!err) {
 			console.log("We are connected");
 		  } else {
 			  console.log("Something went wrong opening the DB");
 		  }
 	  });
-	  dbconn.authenticate(process.env.OPENSHIFT_NOSQL_DB_USERNAME, process.env.OPENSHIFT_NOSQL_DB_PASSWORD);
+	I commented this out  */
+	  
 });
 
 
@@ -46,6 +47,7 @@ app.get('/redhat', function(req, res){
     res.send('Hello everyone! MongoDB + Node.JS + OpenShift = Winning^2');
 });
 
+//get all the users
 app.get('/', function(req, res){
   dbconn.collection('names').find().toArray(function(err, names) {
 	res.header("Content-Type:","text/json");
@@ -53,8 +55,12 @@ app.get('/', function(req, res){
 });
 });
 
+
+//add a user
 app.put('/user/:name', function(req, res){
+	
 	var document = {name:req.params.name};
+	dbconn.authenticate(process.env.OPENSHIFT_NOSQL_DB_USERNAME, process.env.OPENSHIFT_NOSQL_DB_PASSWORD);
 	dbconn.collection('names').insert(document,{safe:true},function(err,doc){
 		if(err){
 			console.log(err);
@@ -67,6 +73,8 @@ app.put('/user/:name', function(req, res){
 	});
 });
 
+
+//add a todo item with a date
 app.put('/todos/:id/:date/:todo', function(req, res){
 	var document = {creator:req.params.id,date:req.params.date,todo:req.params.todo};
 	dbconn.collection('todos').insert(document,{safe:true},function(err,doc){
@@ -75,6 +83,8 @@ app.put('/todos/:id/:date/:todo', function(req, res){
 	});
 });
 
+
+//upsert a todo item given the users id an id to have a todo item
 app.post('/todos/:id/:todo', function(req, res){
 	var id = ObjectID(req.params.id);
 	dbconn.collection('todos').update({_id:id},{$set:{todo:req.params.todo}},{safe:true},function(err,doc){
@@ -89,13 +99,15 @@ app.post('/todos/:id/:todo', function(req, res){
 	});
 });
 
-
+//get all the todos for a given userid
 app.get('/todos/:userid', function(req, res){
 	dbconn.collection('todos').find({creator:req.params.userid}).toArray(function(err, todos) {
 		res.header("Content-Type:","text/json");
 		res.end(JSON.stringify(todos));
 	});
 });
+
+//delete a todo
 
 app.delete('/todos/:id', function(req, res){
 	var id = ObjectID(req.params.id);

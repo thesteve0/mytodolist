@@ -26,15 +26,7 @@ mongo = require('mongodb');
                             Date(Date.now() ), err);
       });
       dbconn = conn;
-/*      dbconn.open(function(err, db) {
-		  if(!err) {
-			console.log("We are connected");
-		  } else {
-			  console.log("Something went wrong opening the DB");
-		  }
-	  });
-	I commented this out  */
-	  
+      
 });
 
 
@@ -52,7 +44,7 @@ app.get('/', function(req, res){
   dbconn.collection('names').find().toArray(function(err, names) {
 	res.header("Content-Type:","text/json");
 	res.end(JSON.stringify(names));
-});
+  });
 });
 
 
